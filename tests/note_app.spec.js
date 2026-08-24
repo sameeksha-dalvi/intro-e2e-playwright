@@ -19,4 +19,20 @@ describe('Note app', () => {
 
         await expect(page.getByText('Matti Luukkainen loggged in')).toBeVisible()
     })
+
+    describe('when logged in', () => {
+        beforeEach(async ({ page }) => {
+            await page.getByRole('button', { name: 'Log In' }).click()
+            await page.getByRole('textbox').first().fill('mluukkai')
+            await page.getByRole('textbox').last().fill('salainen')
+            await page.getByRole('button', { name: 'login' }).click()
+        })
+
+        test('a new note can be created', async ({ page }) => {
+            await page.getByRole('button', { name: 'new note' }).click()
+            await page.getByRole('textbox').fill('a note created by playwright')
+            await page.getByRole('button', { name: 'save' }).click()
+            await expect(page.getByText('a note created by playwright')).toBeVisible()
+        })
+    })
 })
