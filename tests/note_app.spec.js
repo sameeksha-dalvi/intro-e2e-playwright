@@ -58,5 +58,19 @@ describe('Note app', () => {
         })
     })
 
+    test('login fails with wrong password', async ({ page }) => {
+        await page.getByRole('button', { name: 'Log In' }).click()
+        await page.getByRole('textbox').first().fill('mluukkai')
+        await page.getByRole('textbox').last().fill('wrong')
+        await page.getByRole('button', { name: 'login' }).click()
+
+        const errorDiv = page.locator('.error')
+        await expect(errorDiv).toContainText('wrong credentials')
+        await expect(errorDiv).toHaveCSS('border-style', 'solid')
+        await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+
+        await expect(page.getByText('Matti Luukkainen logged in')).not.toBeVisible()
+    })
+
 
 })
